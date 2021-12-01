@@ -278,7 +278,15 @@ function feedback(htmlErrs, cssResult, prjReqs){
 
 function sidebar(doc){
   // create sidebar
+  if(doc == document){
+    console.log("same");
+  } else {console.log("different");}
+  doc = document;
   var bodies = doc.getElementsByTagName("BODY");
+
+  console.log("line 287 (doc): " + doc.getElementsByTagName("BODY"));
+  console.log("line 288 (document): " + document.getElementsByTagName("BODY"));
+  console.log("line 289 (Window): " + Window.document.getElementsByTagName("BODY"));
 
   // create button
   var myElemTag = doc.createElement("div");
