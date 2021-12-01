@@ -276,17 +276,17 @@ function feedback(htmlErrs, cssResult, prjReqs){
   }
 }
 
-function sidebar(){
+function sidebar(doc){
   // create sidebar
-  var bodies = document.getElementsByTagName("BODY");
+  var bodies = doc.getElementsByTagName("BODY");
 
   // create button
-  var myElemTag = document.createElement("div");
+  var myElemTag = doc.createElement("div");
   myElemTag.addEventListener("click", showOnClick);
   myElemTag.id = "feedback";
 
   // create details window
-  var myDetailsTag = document.createElement("div");
+  var myDetailsTag = doc.createElement("div");
   myDetailsTag.id = "feedbackDetails";
 
   // append button
@@ -301,7 +301,7 @@ function sidebar(){
   document.querySelector("#feedbackDetails").style.cssText = "position: fixed; right: 0; top: 0; background: inherit; z-index: 1; display: none; width: 50%; max-height: 100vh; padding: 10px; overflow: scroll; border-radius: 0;";
 }
 
-function main(reqs = prjReqs()) {
+function main(reqs = prjReqs(), doc = document) {
 
   if(debugMode){console.log("main has been called");}
 
@@ -327,7 +327,7 @@ function main(reqs = prjReqs()) {
   if(debugMode){console.log("async stuff started");}
 
   // Build sidebar
-  sidebar();
+  sidebar(doc);
 }
 
 // Simple Javascript function that returns data contained within a set of tags. 
@@ -374,5 +374,3 @@ function showOnClick(){
   }
   console.log(deets.style.display);
 }
-
-alert("hello world");
