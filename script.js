@@ -143,10 +143,10 @@ function openClose(elem, single){
   return errs;
 }
 
-function prjParser(){
+function prjParser(reqs){
   if(debugMode){console.log("prjparser called");}
   var errors = [];
-  var reqs = prjReqs();
+  //var reqs = prjReqs();
   const html = document.documentElement.innerHTML;
 
   // loop through required elements (multiple)
@@ -181,6 +181,8 @@ function prjParser(){
     errors.push("Default title used.");
   } else if (countInstanceInStr("<title></title>", html) > 0) {
     errors.push("Empty title used.");
+  } else if (countInstanceInStr("<title>replit</title>", html) > 0) {
+    errors.push("Default title used.");
   }
 
   // comments
@@ -193,10 +195,10 @@ function prjParser(){
   return errors;
 }
 
-function feedback(htmlErrs, cssResult){
+function feedback(htmlErrs, cssResult, prjReqs){
   // get CSS and project errors
   var cssErrs = cssParser(cssResult);
-  var prjErrs = prjParser();
+  var prjErrs = prjParser(prjReqs);
 
   // calculate number of errors
   const numErrors = htmlErrs.length + cssErrs.length + prjErrs.length;
@@ -247,6 +249,10 @@ function feedback(htmlErrs, cssResult){
       }
       fdbk += "</ol>";
     }
+
+    // let user check spelling
+    fdbk += "<h3>Spell Checker</h3>";
+    fdbk += "<p>Check spelling <a href=\"https://www.online-spellcheck.com/spell-check-url?download_url=" + document.documentURI + "\" target=\"_blank\" rel=\"noopener\">here</a>."
   }
   // display feedback
   document.getElementById("feedbackDetails").innerHTML = fdbk;
@@ -290,12 +296,12 @@ function sidebar(){
   // append feedback details
   myElem.appendChild(myDetailsTag);
 
-  // style sidebar
-  myElem.style.cssText = "height: 20px; width:20px; position: fixed; right: 0; top: 0; background: #FFFFFF;";
-  document.querySelector("#feedbackDetails").style.cssText = "position: fixed; right: 0; top: 0; background: inherit; z-index: 1; display: none; width: 50%; max-height: 100vh; padding: 0.5em; overflow: scroll;";
+// style sidebar
+  myElem.style.cssText = "height: 30px; width:30px; position: fixed; right: 0; top: 0; background: #FFFFFF; border-radius: 0; box-sizing: intial; padding: 0; margin: 0;";
+  document.querySelector("#feedbackDetails").style.cssText = "position: fixed; right: 0; top: 0; background: inherit; z-index: 1; display: none; width: 50%; max-height: 100vh; padding: 10px; overflow: scroll; border-radius: 0;";
 }
 
-function main() {
+ export function main(reqs = prjReqs()) {
 
   if(debugMode){console.log("main has been called");}
 
@@ -308,7 +314,7 @@ function main() {
         .then(function(cssResult){
           if(debugMode){console.log("css result returned");}
           // give feedback
-          feedback(htmlResult, cssResult);
+          feedback(htmlResult, cssResult, reqs);
         })
         .catch(function(){
           cssValAry = "CSS Validation Failed.";
