@@ -374,3 +374,5 @@ function showOnClick(){
   }
   console.log(deets.style.display);
 }
+
+alert("hello world");
