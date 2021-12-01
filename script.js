@@ -301,7 +301,7 @@ function sidebar(){
   document.querySelector("#feedbackDetails").style.cssText = "position: fixed; right: 0; top: 0; background: inherit; z-index: 1; display: none; width: 50%; max-height: 100vh; padding: 10px; overflow: scroll; border-radius: 0;";
 }
 
- export function main(reqs = prjReqs()) {
+function main(reqs = prjReqs()) {
 
   if(debugMode){console.log("main has been called");}
 
