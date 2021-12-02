@@ -276,17 +276,8 @@ function feedback(htmlErrs, cssResult, prjReqs){
   }
 }
 
-function sidebar(doc){
-  // create sidebar
-  if(doc == document){
-    console.log("same");
-  } else {console.log("different");}
-  doc = document;
+function sidebar(){
   var bodies = doc.getElementsByTagName("BODY");
-
-  console.log("line 287 (doc): " + doc.getElementsByTagName("BODY"));
-  console.log("line 288 (document): " + document.getElementsByTagName("BODY"));
-  console.log("line 289 (Window): " + Window.document.getElementsByTagName("BODY"));
 
   // create button
   var myElemTag = doc.createElement("div");
@@ -309,7 +300,7 @@ function sidebar(doc){
   document.querySelector("#feedbackDetails").style.cssText = "position: fixed; right: 0; top: 0; background: inherit; z-index: 1; display: none; width: 50%; max-height: 100vh; padding: 10px; overflow: scroll; border-radius: 0;";
 }
 
-function main(reqs = prjReqs(), doc = document) {
+function main(reqs = prjReqs()) {
 
   if(debugMode){console.log("main has been called");}
 
@@ -335,7 +326,7 @@ function main(reqs = prjReqs(), doc = document) {
   if(debugMode){console.log("async stuff started");}
 
   // Build sidebar
-  sidebar(doc);
+  sidebar();
 }
 
 // Simple Javascript function that returns data contained within a set of tags. 
