@@ -277,15 +277,15 @@ function feedback(htmlErrs, cssResult, prjReqs){
 }
 
 function sidebar(){
-  var bodies = doc.getElementsByTagName("BODY");
+  var bodies = document.getElementsByTagName("BODY");
 
   // create button
-  var myElemTag = doc.createElement("div");
+  var myElemTag = document.createElement("div");
   myElemTag.addEventListener("click", showOnClick);
   myElemTag.id = "feedback";
 
   // create details window
-  var myDetailsTag = doc.createElement("div");
+  var myDetailsTag = document.createElement("div");
   myDetailsTag.id = "feedbackDetails";
 
   // append button
