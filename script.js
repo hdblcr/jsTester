@@ -6,7 +6,9 @@ function prjReqs() {
   var reqElemSingle = [ "head>", "title", "body", "header", "main", "footer"]; // nav, table not required // elements required for each page in this project.
  var reqElemMultiple = ["img"]; // tr, td, th not required
  var reqList = true;
- return {"single": reqElemSingle, "multiple": reqElemMultiple, "list": reqList};
+ var forbiddenCss = ["@import"];
+ var reqCss = ["float", "@import"];
+ return {"single": reqElemSingle, "multiple": reqElemMultiple, "list": reqList, "fbdnCss": forbiddenCss, "reqCss": reqCss};
 }
 
 function cleanString(str){
@@ -179,11 +181,47 @@ function openClose(elem, single){
   return errs;
 }
 
+function gatherCss(){
+  rules = "";
+  for(let i = 0; i < document.styleSheets.length; i++){
+    for(let j=0; j < document.styleSheets[i].cssRules.length; j++){
+      rules += document.styleSheets[i].cssRules[j].cssText;
+      rules += "\n";
+    }
+  }
+  return rules;
+}
+
+function checkForbiddenCss(css, fbdnCss){
+  alert = [];
+  for(let i=0; i < fbdnCss.length; i++){
+    if(countInstanceInStr(fbdnCss[i], css) > 0 ){
+      alert.push(fbdnCss[i]);
+    }
+  }
+  return alert;
+}
+
+function checkReqdCss(css, reqCss){
+    alert = [];
+  for(let i=0; i < reqCss.length; i++){
+    if(countInstanceInStr(reqCss[i], css) < 1 ){
+      alert.push(reqCss[i]);
+    }
+  }
+  return alert;
+}
+
 function prjParser(reqs){
   if(debugMode){console.log("prjparser called");}
   var errors = [];
-  //var reqs = prjReqs();
   const html = document.documentElement.innerHTML;
+  let cssText = gatherCss();
+
+   if(debugMode){console.log(reqs);}
+
+  if(debugMode){console.log(reqs.multiple);}
+  if(debugMode){console.log(reqs.multiple.length);}
 
   // loop through required elements (multiple)
   for (let i = 0; i < reqs.multiple.length; i++){
@@ -212,6 +250,22 @@ function prjParser(reqs){
     }
   }
 
+  // forbidden css
+  if(reqs.fbdnCss.length > 0){
+    let fbdnCssErrs = checkForbiddenCss(cssText, reqs.fbdnCss);
+    for (let i=0; i < fbdnCssErrs.length; i++){
+      errors.push(fbdnCssErrs[i] + " used when it should not be.");
+    }
+  }
+
+  // forbidden css
+  if(reqs.reqCss.length > 0){
+    let reqCssErrs = checkReqdCss(cssText, reqs.reqCss);
+    for (let i=0; i < reqCssErrs.length; i++){
+      errors.push(reqCssErrs[i] + " not used when it should be.");
+    }
+  }
+
   // title
   if (countInstanceInStr("<title>repl.it</title>", html) > 0){
     errors.push("Default title used.");
@@ -231,10 +285,10 @@ function prjParser(reqs){
   return errors;
 }
 
-function feedback(htmlErrs, cssResult, prjReqs){
+function feedback(htmlErrs, cssResult, reqs){
   // get CSS and project errors
   var cssErrs = cssParser(cssResult);
-  var prjErrs = prjParser(prjReqs);
+  var prjErrs = prjParser(reqs);
 
   // calculate number of errors
   const numErrors = htmlErrs.length + cssErrs.length + prjErrs.length;
@@ -318,7 +372,7 @@ function feedback(htmlErrs, cssResult, prjReqs){
 }
 
 function sidebar(){
-  var bodies = document.getElementsByTagName("BODY");
+  //var bodies = document.getElementsByTagName("BODY");
 
   // create button
   var myElemTag = document.createElement("div");
@@ -330,7 +384,7 @@ function sidebar(){
   myDetailsTag.id = "feedbackDetails";
 
   // append button
-  bodies[0].appendChild(myElemTag);
+  document.body.appendChild(myElemTag);
   myElem = document.querySelector("#feedback");
   
   // append feedback details
@@ -342,6 +396,12 @@ function sidebar(){
 }
 
 function main(reqs = prjReqs()) {
+  if(reqs == "replaceMe"){
+    //prjReqs();
+    reqs = prjReqsVal;
+  }
+  if(debugMode){console.log(reqs);}
+  //if(typeof(reqs))
 
   if(debugMode){console.log("main has been called");}
 
@@ -368,7 +428,7 @@ function main(reqs = prjReqs()) {
 
   // Build sidebar
   sidebar();
-  
+
 /* //Starting to build spell checker
   //call spelling
   spellVal()
