@@ -45,6 +45,42 @@ function htmlVal() {
     });
 }
 
+function spellVal() {
+  /*addScript("JavaScriptSpellCheck/include.js");
+  $Spelling.SpellCheckInWindow('all')
+}
+function addScript(script) {
+    var jsElement = document.createElement("script");
+    jsElement.type = "application/javascript";
+    jsElement.src = script;
+    document.body.appendChild(jsElement);
+} */
+/*
+  fetchInject([    
+    'https://www.chrisfinke.com/files/typo-demo/typo/typo.js'
+  ]).then(() => {
+    console.log('spellchecker loaded');
+  })
+*/
+
+
+    return new Promise(function(resolve, reject){
+    var xhr = new XMLHttpRequest();
+    var url = document.documentURI;
+    if(debugMode){console.log(url);}
+    xhr.onload = function() {
+      jsonParse = JSON.parse(this.response);
+      resolve(jsonParse["messages"]);
+    }
+
+    var valUrl = "https://www.chrisfinke.com/files/typo-demo/typo/typo.js";
+    xhr.onerror = reject;
+    xhr.open("GET", valUrl, true);
+    xhr.send();
+    });
+}
+
+
 function checkDict(cssResult) {
   if(debugMode){("check dict called");}
   if (cssResult.indexOf("env:Envelope") == -1){
@@ -260,19 +296,24 @@ function feedback(htmlErrs, cssResult, prjReqs){
   // determine feedback color
   switch(Math.floor((numErrors + 1) / 2)){
     case 0:
-      document.querySelector("#feedback").style.background = "green";
+      document.querySelector("#feedback").style.background = "#006600";
+      document.querySelector("#feedback").style.color = "white";
       break;
     case 1:
-      document.querySelector("#feedback").style.background = "yellowgreen";
+      document.querySelector("#feedback").style.background = "#CCFF33";
+      document.querySelector("#feedback").style.color = "black";
       break;
     case 2:
-      document.querySelector("#feedback").style.background = "yellow";
+      document.querySelector("#feedback").style.background = "#FFCC00";
+      document.querySelector("#feedback").style.color = "black";
       break;
     case 3: 
-      document.querySelector("#feedback").style.background = "pink";
+      document.querySelector("#feedback").style.background = "#FF6633";
+      document.querySelector("#feedback").style.color = "black";
       break;
     default:
-      document.querySelector("#feedback").style.background = "red";
+      document.querySelector("#feedback").style.background = "#990000";
+      document.querySelector("#feedback").style.color = "white";
   }
 }
 
@@ -295,9 +336,9 @@ function sidebar(){
   // append feedback details
   myElem.appendChild(myDetailsTag);
 
-// style sidebar
-  myElem.style.cssText = "height: 30px; width:30px; position: fixed; right: 0; top: 0; background: #FFFFFF; border-radius: 0; box-sizing: intial; padding: 0; margin: 0;";
-  document.querySelector("#feedbackDetails").style.cssText = "position: fixed; right: 0; top: 0; background: inherit; z-index: 1; display: none; width: 50%; max-height: 100vh; padding: 10px; overflow: scroll; border-radius: 0;";
+  // style sidebar
+  myElem.style.cssText = "height: 30px; width:30px; position: fixed; right: 0; top: 0; background: #FFFFFF; border-radius: 0; box-sizing: intial; padding: 0; margin: 0; border: 0 solid green; box-shadow: 0 0;";
+  document.querySelector("#feedbackDetails").style.cssText = "position: fixed; right: 0; top: 0; background: inherit;z-index: 1; display: none; width: 50%; max-height: 100vh;padding: 10px; overflow: scroll; border-radius: 0; box-sizing: intial;  margin: 0; border: 0 solid green; box-shadow: 0 0; font-family: 'Segoe UI', Verdana, Tahoma,sans-serif;";
 }
 
 function main(reqs = prjReqs()) {
@@ -327,6 +368,14 @@ function main(reqs = prjReqs()) {
 
   // Build sidebar
   sidebar();
+  
+/* //Starting to build spell checker
+  //call spelling
+  spellVal()
+    .then(function (response){
+      eval(response);
+      $Spelling.SpellCheckInWindow('all');
+    }).catch(console.log("error with spelling"));*/
 }
 
 // Simple Javascript function that returns data contained within a set of tags. 
@@ -371,5 +420,4 @@ function showOnClick(){
     deets.style.display = "block";
     return;
   }
-  console.log(deets.style.display);
 }
