@@ -351,23 +351,23 @@ function feedback(htmlErrs, cssResult, reqs){
   switch(Math.floor((numErrors + 1) / 2)){
     case 0:
       document.querySelector("#feedback").style.background = "#006600";
-      document.querySelector("#feedback").style.color = "white";
+      document.querySelector("#feedbackDetails").style.color = "white";
       break;
     case 1:
       document.querySelector("#feedback").style.background = "#CCFF33";
-      document.querySelector("#feedback").style.color = "black";
+      document.querySelector("#feedbackDetails").style.color = "black";
       break;
     case 2:
       document.querySelector("#feedback").style.background = "#FFCC00";
-      document.querySelector("#feedback").style.color = "black";
+      document.querySelector("#feedbackDetails").style.color = "black";
       break;
     case 3: 
       document.querySelector("#feedback").style.background = "#FF6633";
-      document.querySelector("#feedback").style.color = "black";
+      document.querySelector("#feedbackDetails").style.color = "black";
       break;
     default:
       document.querySelector("#feedback").style.background = "#990000";
-      document.querySelector("#feedback").style.color = "white";
+      document.querySelector("#feedbackDetails").style.color = "white";
   }
 }
 
