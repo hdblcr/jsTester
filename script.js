@@ -166,7 +166,7 @@ function openClose(elem, single){
   }
 
   // exception for empty elements
-  if (["img", "br", "meta", "link", "meta name=\"description\"", "<meta name=\"description\""].indexOf(elem) > -1) {
+  if (["img", "br", "meta", "link", 'meta name="description"', "<meta name=\"description\""].indexOf(elem) > -1) {
     elemClosed = true;
   }
 
