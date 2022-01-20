@@ -141,12 +141,12 @@ function countInstanceInStr(instance, str) {
 function elemName(elem){
   let gt = elem.indexOf(">");
   if(gt > -1){
-    let newElem = elem.substr(0, gt) + "&gt;" + elem.substr(gt + 1, elem.length - gt);
+    let newElem = elem.substr(0, gt) + elem.substr(gt + 1, elem.length - gt);
     return elemName(newElem);
   }
   let lt = elem.indexOf("<");
   if(lt > -1){
-    let newElem = elem.substr(0, lt) + "&lt;" + elem.substr(lt + 1, elem.length - lt);
+    let newElem = elem.substr(0, lt) + elem.substr(lt + 1, elem.length - lt);
     return elemName(newElem);
   }
   /*
