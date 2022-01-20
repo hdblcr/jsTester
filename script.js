@@ -166,7 +166,7 @@ function openClose(elem, single){
   }
 
   // exception for empty elements
-  if (["img", "br", "meta", "link"].indexOf(elem) > -1) {
+  if (["img", "br", "meta", "link", "meta name=\"description\"", "<meta name=\"description\""].indexOf(elem) > -1) {
     elemClosed = true;
   }
 
@@ -392,7 +392,7 @@ function sidebar(){
 
   // style sidebar
   myElem.style.cssText = "height: 30px; width:30px; position: fixed; right: 0; top: 0; background: #FFFFFF; border-radius: 0; box-sizing: intial; padding: 0; margin: 0; border: 0 solid green; box-shadow: 0 0;";
-  document.querySelector("#feedbackDetails").style.cssText = "position: fixed; right: 0; top: 0; background: inherit; z-index: 1; display: none; width: 50%; max-height: 100vh;padding: 10px; overflow: scroll; border-radius: 0; box-sizing: intial;  margin: 0; border: 0 solid green; box-shadow: 0 0; font-family: 'Segoe UI', Verdana, Tahoma,sans-serif; color: inherit";
+  document.querySelector("#feedbackDetails").style.cssText = "position: fixed; right: 0; top: 0; background: inherit; z-index: 1; display: none; width: 50%; max-height: 100vh; padding: 10px; overflow: scroll; border-radius: 0; box-sizing: intial;  margin: 0; border: 0 solid green; box-shadow: 0 0; font-family: 'Segoe UI', Verdana, Tahoma,sans-serif; color: inherit";
 }
 
 function main(reqs = prjReqs()) {
