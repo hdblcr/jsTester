@@ -139,9 +139,24 @@ function countInstanceInStr(instance, str) {
 }
 
 function elemName(elem){
-  if (elem.substr(elem.len-1) == ">"){
-      return elem.substr(0, elem.length-1)
+  let gt = elem.indexOf("<");
+  if(gt > -1){
+    let newElem = elem.substr(0, gt) + "&gt;" + elem.substr(gt + 1, elem.length - gt);
+    return elemName(newElem);
   }
+  let lt = elem.indexOf(">");
+  if(lt > -1){
+    let newElem = elem.substr(0, lt) + "&lt;" + elem.substr(lt + 1, elem.length - lt);
+    return elemName(newElem);
+  }
+  /*
+  if (elem.substr(elem.len-1) == ">"){
+    return elem.substr(0, elem.length-1);
+  }
+  if (elem.substr(0, 1) == "<"){
+    return elem.substr(0, elem.length-1);
+  }
+  */
   return elem;
 }
 
@@ -180,6 +195,7 @@ function openClose(elem, single){
   }
   return errs;
 }
+
 
 function gatherCss(){
   rules = "";
