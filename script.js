@@ -3,7 +3,7 @@ var debugMode = false;
 function prjReqs() {
   if(debugMode){console.log("prjReqs called");}
   // Required HTML stuff
-  var reqElemSingle = [ "head>", "title", "body", "header", "main", "footer"]; // nav, table not required // elements required for each page in this project.
+  var reqElemSingle = [ "head>", "title", "body", "header", "main", "footer", "meta name=\"description\""]; // nav, table not required // elements required for each page in this project.
  var reqElemMultiple = ["img"]; // tr, td, th not required
  var reqList = true;
  var forbiddenCss = ["@import"];
@@ -165,6 +165,13 @@ function openClose(elem, single){
   var elemOpened = true;
   var elemClosed = true;
   var html = document.documentElement.innerHTML;
+  var isEmptyElem = false;
+  
+  if(["img", "br", "meta", "link", 'meta name="description"', "meta name=\"description\""].indexOf(elem) > -1){isEmptyElem = true;}
+
+  if(debugMode){
+    console.log("Is " + elem + " empty? " + isEmptyElem.toString());
+  }
 
   // check for data
   let numOpen = countInstanceInStr("<" + elem, html);
@@ -181,7 +188,7 @@ function openClose(elem, single){
   }
 
   // exception for empty elements
-  if (["img", "br", "meta", "link", 'meta name="description"', "<meta name=\"description\""].indexOf(elem) > -1) {
+  if (isEmptyElem) {
     elemClosed = true;
   }
 
@@ -189,6 +196,10 @@ function openClose(elem, single){
   if (!elemOpened && !elemClosed){
     return elemName(elem) + " element missing.";
   } else if (!elemOpened) {
+    // empty elements should report missing, not not opened.
+    if (isEmptyElem) {
+      return elemName(elem) + " element missing.";
+    }
     return elemName(elem) + " element not opened.";
   } else if (!elemClosed) {
     return elemName(elem) + " element not closed.";
