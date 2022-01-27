@@ -1,4 +1,5 @@
 var debugMode = false;
+var font = "style=\"font-family: 'Segoe UI', Verdana, Tahoma, sans-serif;\""
 
 function prjReqs() {
   if(debugMode){console.log("prjReqs called");}
@@ -207,7 +208,6 @@ function openClose(elem, single){
   return errs;
 }
 
-
 function gatherCss(){
   rules = "";
   for(let i = 0; i < document.styleSheets.length; i++){
@@ -312,6 +312,12 @@ function prjParser(reqs){
   return errors;
 }
 
+function setStyles(bgcolor, fgcolor){
+  document.querySelector("#feedback").style.background = bgcolor;
+  document.querySelector("#feedbackDetails").style.color = fgcolor;
+  document.querySelector("#feedbackDetails a").style.color = fgcolor;
+}
+
 function feedback(htmlErrs, cssResult, reqs){
   // get CSS and project errors
   var cssErrs = cssParser(cssResult);
@@ -325,17 +331,17 @@ function feedback(htmlErrs, cssResult, reqs){
 
   // if no errors
   if (numErrors == 0){
-    fdbk = "<h2>No errors!</h2>";
+    fdbk = "<h2 " + font + ">No errors!</h2>";
   } else {
     // print number of errors
-    fdbk += "<h2>" + numErrors.toString() + " errors found.</h2>";
+    fdbk += "<h2 " + font + ">" + numErrors.toString() + " errors found.</h2>";
 
     // print project errors
     if (prjErrs.length > 0){
-      fdbk += "<h3>Project Requirements</h3>";
-      fdbk += "<ol>";
+      fdbk += "<h3 " + font + ">Project Requirements</h3>";
+      fdbk += "<ol " + font + ">";
       for (let i=0; i < prjErrs.length; i++){
-        fdbk += "<li>";
+        fdbk += "<li " + font + ">";
         fdbk += prjErrs[i];
         fdbk += "</li>";
       }
@@ -344,12 +350,12 @@ function feedback(htmlErrs, cssResult, reqs){
 
     // print HTML errors
     if (htmlErrs.length > 0) {
-      fdbk += "<h3>HTML Validation</h3>";
-      fdbk += "<ol>";
+      fdbk += "<h3 " + font + ">HTML Validation</h3>";
+      fdbk += "<ol " + font + ">";
       for (let i=0; i < htmlErrs.length; i++){
-        fdbk += "<li>Type: " + htmlErrs[i].type + "<ul>";
-        fdbk += "<li>Error message: " + htmlErrs[i].message + "</li>";
-        fdbk += "<li>Line number: " + htmlErrs[i].lastLine + "</li>";
+        fdbk += "<li " + font + ">Type: " + htmlErrs[i].type + "<ul>";
+        fdbk += "<li " + font + ">Error message: " + htmlErrs[i].message + "</li>";
+        fdbk += "<li " + font + ">Line number: " + htmlErrs[i].lastLine + "</li>";
         fdbk += "</li></ul>";
       }
       fdbk += "</ol>";
@@ -357,19 +363,19 @@ function feedback(htmlErrs, cssResult, reqs){
 
     // print CSS errors
     if (cssErrs.length > 0) {
-      fdbk += "<h3>CSS Validation</h3>";
-      fdbk += "<ol>";
+      fdbk += "<h3 " + font + ">CSS Validation</h3>";
+      fdbk += "<ol " + font + ">";
       for (let i=0; i < cssErrs.length; i++){
-        fdbk += "<li>" + "Error type: " + cleanString(cssErrs[i][0]) + "<ul>";
-        fdbk += "<li>Error message: " + cleanString(cssErrs[i][2]) + "</li>";
-        fdbk += "<li>Line number " + cleanString(cssErrs[i][3]) + "</li></ul></li>";
+        fdbk += "<li " + font + ">" + "Error type: " + cleanString(cssErrs[i][0]) + "<ul>";
+        fdbk += "<li " + font + ">Error message: " + cleanString(cssErrs[i][2]) + "</li>";
+        fdbk += "<li " + font + ">Line number " + cleanString(cssErrs[i][3]) + "</li></ul></li>";
       }
       fdbk += "</ol>";
     }
 
     // let user check spelling
-    fdbk += "<h3>Spell Checker</h3>";
-    fdbk += "<p>Check spelling <a href=\"https://www.online-spellcheck.com/spell-check-url?download_url=" + document.documentURI + "\" target=\"_blank\" rel=\"noopener\">here</a>."
+    fdbk += "<h3 " + font + ">Spell Checker</h3>";
+    fdbk += "<p " + font + ">Check spelling <a " + font + "href=\"https://www.online-spellcheck.com/spell-check-url?download_url=" + document.documentURI + "\" target=\"_blank\" rel=\"noopener\">here</a>."
   }
   // display feedback
   document.getElementById("feedbackDetails").innerHTML = fdbk;
@@ -377,24 +383,19 @@ function feedback(htmlErrs, cssResult, reqs){
   // determine feedback color
   switch(Math.floor((numErrors + 1) / 2)){
     case 0:
-      document.querySelector("#feedback").style.background = "#006600";
-      document.querySelector("#feedbackDetails").style.color = "white";
+      setStyles("#006600", "white");
       break;
     case 1:
-      document.querySelector("#feedback").style.background = "#CCFF33";
-      document.querySelector("#feedbackDetails").style.color = "black";
+      setStyles("#CCFF33", "black");
       break;
     case 2:
-      document.querySelector("#feedback").style.background = "#FFCC00";
-      document.querySelector("#feedbackDetails").style.color = "black";
+      setStyles("#FFCC00", "black");
       break;
     case 3: 
-      document.querySelector("#feedback").style.background = "#FF6633";
-      document.querySelector("#feedbackDetails").style.color = "black";
+      setStyles("#FF6633", "black");
       break;
     default:
-      document.querySelector("#feedback").style.background = "#990000";
-      document.querySelector("#feedbackDetails").style.color = "white";
+      setStyles("#990000", "white");
   }
 }
 
@@ -419,7 +420,7 @@ function sidebar(){
 
   // style sidebar
   myElem.style.cssText = "height: 30px; width:30px; position: fixed; right: 0; top: 0; background: #FFFFFF; border-radius: 0; box-sizing: intial; padding: 0; margin: 0; border: 0 solid green; box-shadow: 0 0;";
-  document.querySelector("#feedbackDetails").style.cssText = "position: fixed; right: 0; top: 0; background: inherit; z-index: 1; display: none; width: 50%; max-height: 100vh; padding: 10px; overflow: scroll; border-radius: 0; box-sizing: intial;  margin: 0; border: 0 solid green; box-shadow: 0 0; font-family: 'Segoe UI', Verdana, Tahoma,sans-serif; color: inherit";
+  document.querySelector("#feedbackDetails").style.cssText = "position: fixed; right: 0; top: 0; background: inherit; z-index: 1; display: none; width: 30vw; min-width: 300px; max-height: 100vh; padding: 10px; overflow: scroll; border-radius: 0; box-sizing: intial;  margin: 0; border: 0 solid green; box-shadow: 0 0; font-family: 'Segoe UI', Verdana, Tahoma, sans-serif; color: inherit; display: block;";
 }
 
 function main(reqs = prjReqs()) {
