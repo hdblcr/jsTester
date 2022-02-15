@@ -1,5 +1,6 @@
 var debugMode = false;
-var font = "style=\"font-family: 'Segoe UI', Verdana, Tahoma, sans-serif;\""
+var font = "style=\"font-family: 'Segoe UI', Verdana, Tahoma, sans-serif;\"";
+var fixWidFont = "style=\"font-family: 'Consolas', 'Courier New', Courier, monospace;\"";
 
 function prjReqs() {
   if(debugMode){console.log("prjReqs called");}
@@ -7,9 +8,10 @@ function prjReqs() {
   var reqElemSingle = [ "head>", "title", "body", "header", "main", "footer", "meta name=\"description\""]; // nav, table not required // elements required for each page in this project.
  var reqElemMultiple = ["img"]; // tr, td, th not required
  var reqList = true;
+  var reqComments = false;
  var forbiddenCss = ["@import"];
  var reqCss = ["float", "@import"];
- return {"single": reqElemSingle, "multiple": reqElemMultiple, "list": reqList, "fbdnCss": forbiddenCss, "reqCss": reqCss};
+ return {"single": reqElemSingle, "multiple": reqElemMultiple, "list": reqList, "fbdnCss": forbiddenCss, "reqCss": reqCss, "reqComments": reqComments};
 }
 
 function cleanString(str){
@@ -334,6 +336,10 @@ function feedback(htmlErrs, cssResult, reqs){
   // if no errors
   if (numErrors == 0){
     fdbk = "<h2 " + font + ">No errors!</h2>";
+    
+    // let user check spelling
+    fdbk += "<h3 " + font + ">Spell Checker</h3>";
+    fdbk += "<p " + font + ">Check spelling <a " + font + "href=\"https://www.online-spellcheck.com/spell-check-url?download_url=" + document.documentURI + "\" target=\"_blank\" rel=\"noopener\">here</a>.";
   } else {
     // print number of errors
     fdbk += "<h2 " + font + ">" + numErrors.toString() + " errors found.</h2>";
@@ -356,7 +362,7 @@ function feedback(htmlErrs, cssResult, reqs){
       fdbk += "<ol " + font + ">";
       for (let i=0; i < htmlErrs.length; i++){
         fdbk += "<li " + font + ">Type: " + htmlErrs[i].type + "<ul>";
-        fdbk += "<li " + font + ">Error message: " + htmlErrs[i].message + "</li>";
+        fdbk += "<li " + font + ">Error message: <span "+ fixWidFont + ">" + htmlErrs[i].message + "</span></li>";
         fdbk += "<li " + font + ">Line number: " + htmlErrs[i].lastLine + "</li>";
         fdbk += "</li></ul>";
       }
@@ -385,25 +391,23 @@ function feedback(htmlErrs, cssResult, reqs){
   // determine feedback color
   switch(Math.floor((numErrors + 1) / 2)){
     case 0:
-      setStyles("#006600", "white");
+      setStyles("#27ae60", "#ecf0f1");
       break;
     case 1:
-      setStyles("#CCFF33", "black");
+      setStyles("#f1c40f", "black");
       break;
     case 2:
-      setStyles("#FFCC00", "black");
+      setStyles("#e67e22", "black");
       break;
     case 3: 
-      setStyles("#FF6633", "black");
+      setStyles("#e74c3c", "black");
       break;
     default:
-      setStyles("#990000", "white");
+      setStyles("#c0392b", "#ecf0f1");
   }
 }
 
 function sidebar(){
-  //var bodies = document.getElementsByTagName("BODY");
-
   // create button
   var myElemTag = document.createElement("div");
   myElemTag.addEventListener("click", showOnClick);
@@ -425,7 +429,7 @@ function sidebar(){
   document.querySelector("#feedbackDetails").style.cssText = "position: fixed; right: 0; top: 0; background: inherit; z-index: 1; display: none; width: 30vw; min-width: 300px; max-height: 100vh; padding: 10px; overflow: scroll; border-radius: 0; box-sizing: intial;  margin: 0; border: 0 solid green; box-shadow: 0 0; font-family: 'Segoe UI', Verdana, Tahoma, sans-serif; color: inherit;";
 }
 
-function main(reqs = prjReqs()) {
+function mainJamesTest(reqs = prjReqs()) {
   if(reqs == "replaceMe"){
     //prjReqs();
     reqs = prjReqsVal;
@@ -510,4 +514,8 @@ function showOnClick(){
     deets.style.display = "block";
     return;
   }
+}
+
+function main(reqs = prjReqs()){
+  mainJamesTest(reqs = prjReqs());
 }
