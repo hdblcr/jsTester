@@ -303,9 +303,11 @@ function prjParser(reqs){
   }
 
   // comments
-  var numComments = countInstanceInStr("<!--", html) + countInstanceInStr("-->", html) / 2;
-  if (numComments - countInstanceInStr("<!-- Don't forget to change your title! -->", html) < 1){
-    errors.push("No comments written.");
+  if((typeof(reqs.reqComments) == "undefined") || reqs.reqComments){
+    var numComments = countInstanceInStr("<!--", html) + countInstanceInStr("-->", html) / 2;
+    if (numComments - countInstanceInStr("<!-- Don't forget to change your title! -->", html) < 1){
+      errors.push("No comments written.");
+    }
   }
 
   // all done!
