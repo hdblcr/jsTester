@@ -1,10 +1,10 @@
-var debugMode = true;
+const DEBUG_MODE = false;
 const VERBOSE = false;
 var font = "style=\"font-family: 'Segoe UI', Verdana, Tahoma, sans-serif;\"";
 var fixWidFont = "style=\"font-family: 'Consolas', 'Courier New', Courier, monospace;\"";
 
 function prjReqs() {
-  if(debugMode){console.log("prjReqs called");}
+  if(DEBUG_MODE){console.log("prjReqs called");}
   // Required HTML stuff
   var reqElemSingle = [ "head>", "title", "body", "header", "main", "footer", "meta name=\"description\""]; // nav, table not required // elements required for each page in this project.
  var reqElemMultiple = ["img"]; // tr, td, th not required
@@ -27,7 +27,7 @@ function cssVal() {
     // very short timeout since website is down
     let cssTimeout = setTimeout(()=>{
       reject('timeout');
-      if(debugMode){
+      if(DEBUG_MODE){
         console.log("css timeout");
       }
     }, 250);
@@ -53,17 +53,17 @@ function htmlVal() {
     let startTime = new Date();
     let htmlTimeout = setTimeout(()=>{
       reject("timeout");
-      if(debugMode){
+      if(DEBUG_MODE){
         console.log("html timeout");
       }
     },7500);
     
-    if(debugMode){console.log(url);}
+    if(DEBUG_MODE){console.log(url);}
       xhr.onload = function() {
         clearTimeout(htmlTimeout);
         jsonParse = JSON.parse(this.response);
         resolve(jsonParse["messages"]);
-        if(debugMode){
+        if(DEBUG_MODE){
           let endTime = new Date();
           let duration = endTime - startTime;
           console.log("HTML validation took " + duration + " ms.");
@@ -99,7 +99,7 @@ function addScript(script) {
     return new Promise(function(resolve, reject){
     var xhr = new XMLHttpRequest();
     var url = document.documentURI;
-    if(debugMode){console.log(url);}
+    if(DEBUG_MODE){console.log(url);}
     xhr.onload = function() {
       jsonParse = JSON.parse(this.response);
       resolve(jsonParse["messages"]);
@@ -113,7 +113,7 @@ function addScript(script) {
 }
 
 function checkDict(cssResult) {
-  if(debugMode){("check dict called");}
+  if(DEBUG_MODE){("check dict called");}
   if (cssResult.indexOf("env:Envelope") == -1){
     return false;
   } else if (cssResult.indexOf("env:Body") == -1){
@@ -130,7 +130,7 @@ function checkDict(cssResult) {
 }
 
 function cssParser(cssResult){
-  if(debugMode){console.log("css parser called");}
+  if(DEBUG_MODE){console.log("css parser called");}
   var errMsg = [];
   if (checkDict(cssResult)){
     // no errors?
@@ -268,7 +268,7 @@ function checkReqdCss(css, reqCss){
 }
 
 function prjParser(reqs){
-  if(debugMode){console.log("prjparser called");}
+  if(DEBUG_MODE){console.log("prjparser called");}
   var errors = [];
   const html = document.documentElement.innerHTML;
   let cssText = gatherCss();
@@ -349,7 +349,7 @@ function setStyles(bgcolor, fgcolor){
 }
 
 function feedback(htmlErrs, cssResult, reqs){
-  if(debugMode){console.log("feedback function called");}
+  if(DEBUG_MODE){console.log("feedback function called");}
   
   var numCss;
   var numHtml = htmlErrs.length;
@@ -457,7 +457,7 @@ function feedback(htmlErrs, cssResult, reqs){
     fdbk += "<p " + font + ">Check spelling <a " + font + "href=\"https://www.online-spellcheck.com/spell-check-url?download_url=" + document.documentURI + "\" target=\"_blank\" rel=\"noopener\">here</a>."
   }
 
-  if(debugMode){console.log("feedback string done");}
+  if(DEBUG_MODE){console.log("feedback string done");}
   
   // display feedback
   document.getElementById("feedbackDetails").innerHTML = fdbk;
@@ -480,7 +480,7 @@ function feedback(htmlErrs, cssResult, reqs){
       setStyles("#c0392b", "#ecf0f1");
   }
 
-  if(debugMode){console.log("sidebar restyled");}
+  if(DEBUG_MODE){console.log("sidebar restyled");}
 }
 
 function sidebar(){
@@ -506,16 +506,16 @@ function sidebar(){
 }
 
 function cssValSubset(htmlResult, reqs){
-  if(debugMode){console.log("Calling css validation");}
+  if(DEBUG_MODE){console.log("Calling css validation");}
   return cssVal()
         .then(function(cssResult){
-          if(debugMode){console.log("css result returned");}
+          if(DEBUG_MODE){console.log("css result returned");}
           // give feedback
           feedback(htmlResult, cssResult, reqs);
         })
         .catch(function(cssResult){
           cssValAry = ["CSS Validation Failed."];
-          if(debugMode){console.log("CSS fail, calling fdbk");}
+          if(DEBUG_MODE){console.log("CSS fail, calling fdbk");}
           feedback(htmlResult, cssValAry, reqs);
         })
 }
@@ -528,24 +528,24 @@ function mainJamesTest(reqs = prjReqs()) {
   if(VERBOSE){console.log(reqs);}
   //if(typeof(reqs))
 
-  if(debugMode){console.log("main has been called");}
+  if(DEBUG_MODE){console.log("main has been called");}
 
   // HTML validation
   htmlVal()
     .then(function(htmlResult){
-      if(debugMode){console.log("html result returned");}
+      if(DEBUG_MODE){console.log("html result returned");}
       
       // CSS validation
       cssValSubset(htmlResult, reqs);
     }).catch(function() {
-      if(debugMode){console.log("html reject returned");}
+      if(DEBUG_MODE){console.log("html reject returned");}
       let htmlResult = ["HTML Validation Failed."];
       
       // CSS validation
       cssValSubset(htmlResult, reqs);
     });
 
-  if(debugMode){console.log("async stuff started");}
+  if(DEBUG_MODE){console.log("async stuff started");}
 
   // Build sidebar
   sidebar();
