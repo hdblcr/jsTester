@@ -26,13 +26,14 @@ function cssVal() {
   return new Promise(function(resolve, reject){
     var xhr = new XMLHttpRequest();
     var url = document.documentURI;
-    
+
+    // very short timeout since website is down
     let cssTimeout = setTimeout(()=>{
       reject('timeout');
       if(debugMode){
         console.log("css timeout");
       }
-    }, 3000);
+    }, 250);
 
     xhr.onload = function() {
       resolve(this.responseText);
@@ -50,13 +51,14 @@ function htmlVal() {
   return new Promise(function(resolve, reject){
     var xhr = new XMLHttpRequest();
     var url = document.documentURI;
-    
+
+    // long timeout since service takes awhile
     let htmlTimeout = setTimeout(()=>{
       reject('timeout');
       if(debugMode){
         console.log("html timeout");
       }
-    }, 5000);
+    },7500);
     
     if(debugMode){console.log(url);}
       xhr.onload = function() {
@@ -349,7 +351,8 @@ function feedback(htmlErrs, cssResult, reqs){
   
   var numCss;
   var numHtml = htmlErrs.length;
-  let cssFail = false, htmlFail = false;
+  var cssFail = false;
+  var htmlFail = false;
   
   // get CSS and project errors
   if (cssResult[0] !== "CSS Validation Failed."){
@@ -364,7 +367,7 @@ function feedback(htmlErrs, cssResult, reqs){
   }
 
   // reduce HTML errors if it didn't validate
-  if (htmlResult[0] == "HTML Validation Failed."){
+  if (htmlErrs[0] == "HTML Validation Failed."){
     numHtml = 0;
     htmlFail = true;
   }
@@ -455,6 +458,9 @@ function feedback(htmlErrs, cssResult, reqs){
     fdbk += "<h3 " + font + ">Spell Checker</h3>";
     fdbk += "<p " + font + ">Check spelling <a " + font + "href=\"https://www.online-spellcheck.com/spell-check-url?download_url=" + document.documentURI + "\" target=\"_blank\" rel=\"noopener\">here</a>."
   }
+
+  if(debugMode){console.log("feedback string done");}
+  
   // display feedback
   document.getElementById("feedbackDetails").innerHTML = fdbk;
 
@@ -475,6 +481,8 @@ function feedback(htmlErrs, cssResult, reqs){
     default:
       setStyles("#c0392b", "#ecf0f1");
   }
+
+  if(debugMode){console.log("sidebar restyled");}
 }
 
 function sidebar(){
