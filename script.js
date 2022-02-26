@@ -345,22 +345,38 @@ function setStyles(bgcolor, fgcolor){
 }
 
 function feedback(htmlErrs, cssResult, reqs){
+  if(debugMode){console.log("feedback function called");}
+  
   var numCss;
   var numHtml = htmlErrs.length;
+  let cssFail = false, htmlFail = false;
   
   // get CSS and project errors
   if (cssResult[0] !== "CSS Validation Failed."){
+    if(debugMode){console.log("line 356");}
     var cssErrs = cssParser(cssResult);
     numCss = cssErrs.length;
   } else {
+    if(debugMode){console.log("line 360");}
     cssErrs = cssResult;
     numCss = 0;
+    cssFail = true;
   }
-  
+
+  // reduce HTML errors if it didn't validate
+  if (htmlResult[0] == "HTML Validation Failed."){
+    numHtml = 0;
+    htmlFail = true;
+  }
+
+  if(debugMode){console.log("line 372");}
+
+  // collect project errors
   var prjErrs = prjParser(reqs);
+  var numPrj = prjErrs.length;
 
   // calculate number of errors
-  const numErrors = htmlErrs.length + cssErrs.length + prjErrs.length;
+  const numErrors = numHtml + numCss + numPrj;
 
   // feedback string
   var fdbk = "";
@@ -372,6 +388,18 @@ function feedback(htmlErrs, cssResult, reqs){
     // let user check spelling
     fdbk += "<h3 " + font + ">Spell Checker</h3>";
     fdbk += "<p " + font + ">Check spelling <a " + font + "href=\"https://www.online-spellcheck.com/spell-check-url?download_url=" + document.documentURI + "\" target=\"_blank\" rel=\"noopener\">here</a>.";
+
+    // report validation fails
+    if (htmlFail) {
+      fdbk += "<h3 " + font + ">HTML Validation</h3>";
+      fdbk += "<p>HTML Validation Failed.</p>";
+    }
+    
+    if (cssFail) {
+      fdbk += "<h3 " + font + ">CSS Validation</h3>";
+      fdbk += "<p>CSS Validation Failed.</p>";
+    }
+    
   } else {
     // print number of errors
     fdbk += "<h2 " + font + ">" + numErrors.toString() + " errors found.</h2>";
@@ -494,6 +522,7 @@ function mainJamesTest(reqs = prjReqs()) {
         })
         .catch(function(){
           cssValAry = ["CSS Validation Failed."];
+          if(debugMode){console.log("=== CSS fail, calling fdbk ===");}
           feedback(htmlResult, cssValAry, reqs);
         })
     })
@@ -507,6 +536,7 @@ function mainJamesTest(reqs = prjReqs()) {
         })
         .catch(function(){
           cssResult = ["CSS Validation Failed."];
+          if(debugMode){console.log("=== CSS fail, calling fdbk ===");}
           feedback(htmlResult, cssResult, reqs);
         })
     });
