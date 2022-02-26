@@ -1,4 +1,4 @@
-var debugMode = false;
+var debugMode = true;
 var font = "style=\"font-family: 'Segoe UI', Verdana, Tahoma, sans-serif;\"";
 var fixWidFont = "style=\"font-family: 'Consolas', 'Courier New', Courier, monospace;\"";
 
@@ -18,35 +18,57 @@ function cleanString(str){
   return str.replace(/\n+/g, '');;
 }
 
+async function cssVal2() {
+  const RESPONSE = await fetch()
+}
+
 function cssVal() {
   return new Promise(function(resolve, reject){
     var xhr = new XMLHttpRequest();
     var url = document.documentURI;
+    
+    let myTimeout = setTimeout(()=>{
+      reject('timeout');
+      if(debugMode){
+        console.log("css timeout");
+      }
+    }, 3000);
+
     xhr.onload = function() {
       resolve(this.responseText);
+      clearTimeout(myTimeout);
     }
 
     var valUrl = "https://jigsaw.w3.org/css-validator/validator?uri=".concat(url).concat("&output=soap12&t=").concat(Math.random());
     xhr.onerror = reject;
     xhr.open("GET", valUrl, true);
     xhr.send();
-    });
+    });  
 }
 
 function htmlVal() {
   return new Promise(function(resolve, reject){
     var xhr = new XMLHttpRequest();
     var url = document.documentURI;
-  if(debugMode){console.log(url);}
-    xhr.onload = function() {
-      jsonParse = JSON.parse(this.response);
-      resolve(jsonParse["messages"]);
-    }
-
-    var valUrl = "https://validator.w3.org/nu/".concat("?doc=").concat(url).concat("&out=json&t=").concat(Math.random());
-    xhr.onerror = reject;
-    xhr.open("GET", valUrl, true);
-    xhr.send();
+    
+    let myTimeout = setTimeout(()=>{
+      reject('timeout');
+      if(debugMode){
+        console.log("html timeout");
+      }
+    }, 3000);
+    
+    if(debugMode){console.log(url);}
+      xhr.onload = function() {
+        jsonParse = JSON.parse(this.response);
+        resolve(jsonParse["messages"]);
+        clearTimeout(myTimeout);
+      }
+  
+      var valUrl = "https://validator.w3.org/nu/".concat("?doc=").concat(url).concat("&out=json&t=").concat(Math.random());
+      xhr.onerror = reject;
+      xhr.open("GET", valUrl, true);
+      xhr.send();
     });
 }
 
@@ -452,6 +474,7 @@ function mainJamesTest(reqs = prjReqs()) {
         })
         .catch(function(){
           cssValAry = "CSS Validation Failed.";
+          feedback(htmlResult, cssValAry, reqs);
         })
     })
     .catch(function() {
