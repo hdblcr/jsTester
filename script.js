@@ -1,4 +1,4 @@
-var debugMode = false;
+var debugMode = true;
 var font = "style=\"font-family: 'Segoe UI', Verdana, Tahoma, sans-serif;\"";
 var fixWidFont = "style=\"font-family: 'Consolas', 'Courier New', Courier, monospace;\"";
 
@@ -53,8 +53,9 @@ function htmlVal() {
     var url = document.documentURI;
 
     // long timeout since service takes awhile
+    let startTime = new Date();
     let htmlTimeout = setTimeout(()=>{
-      reject('timeout');
+      reject(['HTML Validation Failed.']);
       if(debugMode){
         console.log("html timeout");
       }
@@ -62,12 +63,17 @@ function htmlVal() {
     
     if(debugMode){console.log(url);}
       xhr.onload = function() {
+        clearTimeout(htmlTimeout);
         jsonParse = JSON.parse(this.response);
         resolve(jsonParse["messages"]);
-        clearTimeout(htmlTimeout);
+        if(debugMode){
+          let endTime = new Date();
+          let duration = endTime - startTime;
+          console.log("HTML validation took " + duration + " ms.");
+        }
       }
   
-      var valUrl = "https://validator.w3.org/nu/".concat("?doc=").concat(url).concat("&out=json&t=").concat(Math.random());
+      var valUrl = "https://validator.nu/" + "?doc="+ url + "&out=json&t=" + Math.random() + "&apikey=4o3wykk44144os4ko4kkcgo0g40kgso";
       xhr.onerror = reject;
       xhr.open("GET", valUrl, true);
       xhr.send();
@@ -504,7 +510,22 @@ function sidebar(){
 
   // style sidebar
   myElem.style.cssText = "height: 30px; width:30px; position: fixed; right: 0; top: 0; background: #FFFFFF; border-radius: 0; box-sizing: intial; padding: 0; margin: 0; border: 0 solid green; box-shadow: 0 0;";
-  document.querySelector("#feedbackDetails").style.cssText = "position: fixed; right: 0; top: 0; background: inherit; z-index: 1; display: none; width: 30vw; min-width: 300px; max-height: 100vh; padding: 10px; overflow: scroll; border-radius: 0; box-sizing: intial;  margin: 0; border: 0 solid green; box-shadow: 0 0; font-family: 'Segoe UI', Verdana, Tahoma, sans-serif; color: inherit;";
+  document.querySelector("#feedbackDetails").style.cssText = "position: fixed; right: 0; top: 0; background: inherit; z-index: 1; display: none; width: 30vw; min-width: 300px; max-height: 100vh; padding: 10px; overflow: scroll; border-radius: 0; box-sizing: intial;  margin: 0; border: 0 solid green; box-shadow: 0 0; font-family: 'Segoe UI', Verdana, Tahoma, sans-serif; color: inherit; text-align: left;";
+}
+
+function cssValSubset(htmlResult, reqs){
+  if(debugMode){console.log("Calling css validation");}
+  return cssVal()
+        .then(function(cssResult){
+          if(debugMode){console.log("css result returned");}
+          // give feedback
+          feedback(htmlResult, cssResult, reqs);
+        })
+        .catch(function(htmlResult){
+          cssValAry = ["CSS Validation Failed."];
+          if(debugMode){console.log("=== CSS fail, calling fdbk ===");}
+          feedback(htmlResult, cssValAry, reqs);
+        })
 }
 
 function mainJamesTest(reqs = prjReqs()) {
@@ -521,32 +542,15 @@ function mainJamesTest(reqs = prjReqs()) {
   htmlVal()
     .then(function(htmlResult){
       if(debugMode){console.log("html result returned");}
+      
       // CSS validation
-      cssVal()
-        .then(function(cssResult){
-          if(debugMode){console.log("css result returned");}
-          // give feedback
-          feedback(htmlResult, cssResult, reqs);
-        })
-        .catch(function(){
-          cssValAry = ["CSS Validation Failed."];
-          if(debugMode){console.log("=== CSS fail, calling fdbk ===");}
-          feedback(htmlResult, cssValAry, reqs);
-        })
-    })
-    .catch(function() {
+      cssValSubset(htmlResult, reqs);
+    }).catch(function(htmlResult) {
+      if(debugMode){console.log("html reject returned");}
       htmlResult = ["HTML Validation Failed."];
-      cssVal()
-        .then(function(cssResult){
-          if(debugMode){console.log("css result returned");}
-          // give feedback
-          feedback(htmlResult, cssResult, reqs);
-        })
-        .catch(function(){
-          cssResult = ["CSS Validation Failed."];
-          if(debugMode){console.log("=== CSS fail, calling fdbk ===");}
-          feedback(htmlResult, cssResult, reqs);
-        })
+      
+      // CSS validation
+      cssValSubset(htmlResult, reqs);
     });
 
   if(debugMode){console.log("async stuff started");}
@@ -564,8 +568,7 @@ function mainJamesTest(reqs = prjReqs()) {
 }
 
 // Simple Javascript function that returns data contained within a set of tags. 
-function getTagValue(inputStr, tagName)
-{
+function getTagValue(inputStr, tagName) {
   // Simple function to search for tagged element in a string,
   // this function will not recurse and simply finds first ocurrence
   // of tag in document.
@@ -607,6 +610,10 @@ function showOnClick(){
   }
 }
 
-function main(reqs = prjReqs()){
+var main = function (reqs = prjReqs()){
   mainJamesTest(reqs = prjReqs());
 }
+
+document.addEventListener("DOMContentLoaded", function(){
+  mainJamesTest(reqs = prjReqs());
+});
