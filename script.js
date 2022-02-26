@@ -27,7 +27,7 @@ function cssVal() {
     var xhr = new XMLHttpRequest();
     var url = document.documentURI;
     
-    let myTimeout = setTimeout(()=>{
+    let cssTimeout = setTimeout(()=>{
       reject('timeout');
       if(debugMode){
         console.log("css timeout");
@@ -36,7 +36,7 @@ function cssVal() {
 
     xhr.onload = function() {
       resolve(this.responseText);
-      clearTimeout(myTimeout);
+      clearTimeout(cssTimeout);
     }
 
     var valUrl = "https://jigsaw.w3.org/css-validator/validator?uri=".concat(url).concat("&output=soap12&t=").concat(Math.random());
@@ -51,18 +51,18 @@ function htmlVal() {
     var xhr = new XMLHttpRequest();
     var url = document.documentURI;
     
-    let myTimeout = setTimeout(()=>{
+    let htmlTimeout = setTimeout(()=>{
       reject('timeout');
       if(debugMode){
         console.log("html timeout");
       }
-    }, 3000);
+    }, 5000);
     
     if(debugMode){console.log(url);}
       xhr.onload = function() {
         jsonParse = JSON.parse(this.response);
         resolve(jsonParse["messages"]);
-        clearTimeout(myTimeout);
+        clearTimeout(htmlTimeout);
       }
   
       var valUrl = "https://validator.w3.org/nu/".concat("?doc=").concat(url).concat("&out=json&t=").concat(Math.random());
@@ -345,8 +345,18 @@ function setStyles(bgcolor, fgcolor){
 }
 
 function feedback(htmlErrs, cssResult, reqs){
+  var numCss;
+  var numHtml = htmlErrs.length;
+  
   // get CSS and project errors
-  var cssErrs = cssParser(cssResult);
+  if (cssResult[0] !== "CSS Validation Failed."){
+    var cssErrs = cssParser(cssResult);
+    numCss = cssErrs.length;
+  } else {
+    cssErrs = cssResult;
+    numCss = 0;
+  }
+  
   var prjErrs = prjParser(reqs);
 
   // calculate number of errors
@@ -380,27 +390,37 @@ function feedback(htmlErrs, cssResult, reqs){
 
     // print HTML errors
     if (htmlErrs.length > 0) {
-      fdbk += "<h3 " + font + ">HTML Validation</h3>";
-      fdbk += "<ol " + font + ">";
-      for (let i=0; i < htmlErrs.length; i++){
-        fdbk += "<li " + font + ">Type: " + htmlErrs[i].type + "<ul>";
-        fdbk += "<li " + font + ">Error message: <span "+ fixWidFont + ">" + htmlErrs[i].message + "</span></li>";
-        fdbk += "<li " + font + ">Line number: " + htmlErrs[i].lastLine + "</li>";
-        fdbk += "</li></ul>";
+      if (htmlErrs[0] == "HTML Validation Failed."){
+        fdbk += "<h3 " + font + ">HTML Validation</h3>";
+        fdbk += "<p>HTML Validation Failed.</p>";
+      } else {
+        fdbk += "<h3 " + font + ">HTML Validation</h3>";
+        fdbk += "<ol " + font + ">";
+        for (let i=0; i < htmlErrs.length; i++){
+          fdbk += "<li " + font + ">Type: " + htmlErrs[i].type + "<ul>";
+          fdbk += "<li " + font + ">Error message: <span "+ fixWidFont + ">" + htmlErrs[i].message + "</span></li>";
+          fdbk += "<li " + font + ">Line number: " + htmlErrs[i].lastLine + "</li>";
+          fdbk += "</li></ul>";
+        }
+        fdbk += "</ol>";
       }
-      fdbk += "</ol>";
     }
 
     // print CSS errors
     if (cssErrs.length > 0) {
-      fdbk += "<h3 " + font + ">CSS Validation</h3>";
-      fdbk += "<ol " + font + ">";
-      for (let i=0; i < cssErrs.length; i++){
-        fdbk += "<li " + font + ">" + "Error type: " + cleanString(cssErrs[i][0]) + "<ul>";
-        fdbk += "<li " + font + ">Error message: " + cleanString(cssErrs[i][2]) + "</li>";
-        fdbk += "<li " + font + ">Line number " + cleanString(cssErrs[i][3]) + "</li></ul></li>";
+      if (cssErrs[0] == "CSS Validation Failed."){
+        fdbk += "<h3 " + font + ">CSS Validation</h3>";
+        fdbk += "<p>CSS Validation Failed.</p>";
+      } else {
+        fdbk += "<h3 " + font + ">CSS Validation</h3>";
+        fdbk += "<ol " + font + ">";
+        for (let i=0; i < cssErrs.length; i++){
+          fdbk += "<li " + font + ">" + "Error type: " + cleanString(cssErrs[i][0]) + "<ul>";
+          fdbk += "<li " + font + ">Error message: " + cleanString(cssErrs[i][2]) + "</li>";
+          fdbk += "<li " + font + ">Line number " + cleanString(cssErrs[i][3]) + "</li></ul></li>";
+        }
+        fdbk += "</ol>";
       }
-      fdbk += "</ol>";
     }
 
     // let user check spelling
@@ -473,12 +493,22 @@ function mainJamesTest(reqs = prjReqs()) {
           feedback(htmlResult, cssResult, reqs);
         })
         .catch(function(){
-          cssValAry = "CSS Validation Failed.";
+          cssValAry = ["CSS Validation Failed."];
           feedback(htmlResult, cssValAry, reqs);
         })
     })
     .catch(function() {
-      htmlValAry = "HTML Validation Failed.";
+      htmlResult = ["HTML Validation Failed."];
+      cssVal()
+        .then(function(cssResult){
+          if(debugMode){console.log("css result returned");}
+          // give feedback
+          feedback(htmlResult, cssResult, reqs);
+        })
+        .catch(function(){
+          cssResult = ["CSS Validation Failed."];
+          feedback(htmlResult, cssResult, reqs);
+        })
     });
 
   if(debugMode){console.log("async stuff started");}
