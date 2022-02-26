@@ -1,4 +1,5 @@
 var debugMode = true;
+const VERBOSE = false;
 var font = "style=\"font-family: 'Segoe UI', Verdana, Tahoma, sans-serif;\"";
 var fixWidFont = "style=\"font-family: 'Consolas', 'Courier New', Courier, monospace;\"";
 
@@ -16,10 +17,6 @@ function prjReqs() {
 
 function cleanString(str){
   return str.replace(/\n+/g, '');;
-}
-
-async function cssVal2() {
-  const RESPONSE = await fetch()
 }
 
 function cssVal() {
@@ -55,7 +52,7 @@ function htmlVal() {
     // long timeout since service takes awhile
     let startTime = new Date();
     let htmlTimeout = setTimeout(()=>{
-      reject(['HTML Validation Failed.']);
+      reject("timeout");
       if(debugMode){
         console.log("html timeout");
       }
@@ -114,7 +111,6 @@ function addScript(script) {
     xhr.send();
     });
 }
-
 
 function checkDict(cssResult) {
   if(debugMode){("check dict called");}
@@ -202,7 +198,7 @@ function openClose(elem, single){
   
   if(["img", "br", "meta", "link", 'meta name="description"', "meta name=\"description\""].indexOf(elem) > -1){isEmptyElem = true;}
 
-  if(debugMode){
+  if(VERBOSE){
     console.log("Is " + elem + " empty? " + isEmptyElem.toString());
   }
 
@@ -277,10 +273,10 @@ function prjParser(reqs){
   const html = document.documentElement.innerHTML;
   let cssText = gatherCss();
 
-   if(debugMode){console.log(reqs);}
+   if(VERBOSE){console.log(reqs);}
 
-  if(debugMode){console.log(reqs.multiple);}
-  if(debugMode){console.log(reqs.multiple.length);}
+  if(VERBOSE){console.log(reqs.multiple);}
+  if(VERBOSE){console.log(reqs.multiple.length);}
 
   // loop through required elements (multiple)
   for (let i = 0; i < reqs.multiple.length; i++){
@@ -362,11 +358,9 @@ function feedback(htmlErrs, cssResult, reqs){
   
   // get CSS and project errors
   if (cssResult[0] !== "CSS Validation Failed."){
-    if(debugMode){console.log("line 356");}
     var cssErrs = cssParser(cssResult);
     numCss = cssErrs.length;
   } else {
-    if(debugMode){console.log("line 360");}
     cssErrs = cssResult;
     numCss = 0;
     cssFail = true;
@@ -377,8 +371,6 @@ function feedback(htmlErrs, cssResult, reqs){
     numHtml = 0;
     htmlFail = true;
   }
-
-  if(debugMode){console.log("line 372");}
 
   // collect project errors
   var prjErrs = prjParser(reqs);
@@ -521,9 +513,9 @@ function cssValSubset(htmlResult, reqs){
           // give feedback
           feedback(htmlResult, cssResult, reqs);
         })
-        .catch(function(htmlResult){
+        .catch(function(cssResult){
           cssValAry = ["CSS Validation Failed."];
-          if(debugMode){console.log("=== CSS fail, calling fdbk ===");}
+          if(debugMode){console.log("CSS fail, calling fdbk");}
           feedback(htmlResult, cssValAry, reqs);
         })
 }
@@ -533,7 +525,7 @@ function mainJamesTest(reqs = prjReqs()) {
     //prjReqs();
     reqs = prjReqsVal;
   }
-  if(debugMode){console.log(reqs);}
+  if(VERBOSE){console.log(reqs);}
   //if(typeof(reqs))
 
   if(debugMode){console.log("main has been called");}
@@ -545,9 +537,9 @@ function mainJamesTest(reqs = prjReqs()) {
       
       // CSS validation
       cssValSubset(htmlResult, reqs);
-    }).catch(function(htmlResult) {
+    }).catch(function() {
       if(debugMode){console.log("html reject returned");}
-      htmlResult = ["HTML Validation Failed."];
+      let htmlResult = ["HTML Validation Failed."];
       
       // CSS validation
       cssValSubset(htmlResult, reqs);
@@ -614,6 +606,6 @@ var main = function (reqs = prjReqs()){
   mainJamesTest(reqs = prjReqs());
 }
 
-document.addEventListener("DOMContentLoaded", function(){
-  mainJamesTest(reqs = prjReqs());
-});
+// document.addEventListener("DOMContentLoaded", function(){
+//   mainJamesTest(reqs = prjReqs());
+// });
