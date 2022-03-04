@@ -9,7 +9,7 @@ function prjReqs() {
   var reqElemSingle = [ "head>", "title", "body", "header", "main", "footer", "meta name=\"description\""]; // nav, table not required // elements required for each page in this project.
  var reqElemMultiple = ["img"]; // tr, td, th not required
  var reqList = true;
-  var reqComments = false;
+ var reqComments = false;
  var forbiddenCss = ["@import"];
  var reqCss = ["float", "@import"];
  return {"single": reqElemSingle, "multiple": reqElemMultiple, "list": reqList, "fbdnCss": forbiddenCss, "reqCss": reqCss, "reqComments": reqComments};
@@ -30,7 +30,7 @@ function cssVal() {
       if(DEBUG_MODE){
         console.log("css timeout");
       }
-    }, 250);
+    }, 2500);
 
     xhr.onload = function() {
       resolve(this.responseText);
@@ -48,33 +48,37 @@ function htmlVal() {
   return new Promise(function(resolve, reject){
     var xhr = new XMLHttpRequest();
     var url = document.documentURI;
+    //var valService = "https://validator.nu/";
+    var valService = "https://validator.w3.org/nu/";
 
     // long timeout since service takes awhile
     let startTime = new Date();
+    if(DEBUG_MODE){
+      console.log("starting html");
+    }
     let htmlTimeout = setTimeout(()=>{
       reject("timeout");
       if(DEBUG_MODE){
         console.log("html timeout");
       }
-    },7500);
+    },2500);
     
-    if(DEBUG_MODE){console.log(url);}
-      xhr.onload = function() {
-        clearTimeout(htmlTimeout);
-        jsonParse = JSON.parse(this.response);
-        resolve(jsonParse["messages"]);
-        if(DEBUG_MODE){
-          let endTime = new Date();
-          let duration = endTime - startTime;
-          console.log("HTML validation took " + duration + " ms.");
-        }
+    xhr.onload = function() {
+      clearTimeout(htmlTimeout);
+      jsonParse = JSON.parse(this.response);
+      resolve(jsonParse["messages"]);
+      if(DEBUG_MODE){
+        let endTime = new Date();
+        let duration = endTime - startTime;
+        console.log("===========HTML validation took " + duration + " ms.=============");
       }
-  
-      var valUrl = "https://validator.nu/" + "?doc="+ url + "&out=json&t=" + Math.random() + "&apikey=4o3wykk44144os4ko4kkcgo0g40kgso";
-      xhr.onerror = reject;
-      xhr.open("GET", valUrl, true);
-      xhr.send();
-    });
+    }
+    
+    var valUrl = valService + "?doc="+ url + "&out=json&t=" + Math.random();
+    xhr.onerror = reject;
+    xhr.open("GET", valUrl, true);
+    xhr.send();
+  });
 }
 
 function spellVal() {
@@ -267,13 +271,17 @@ function checkReqdCss(css, reqCss){
   return alert;
 }
 
+function checkConventions(html){
+  html.match(/<\/*[A-Z]/g); // match returns an array with all matches. Each is a string
+}
+
 function prjParser(reqs){
   if(DEBUG_MODE){console.log("prjparser called");}
   var errors = [];
   const html = document.documentElement.innerHTML;
   let cssText = gatherCss();
 
-   if(VERBOSE){console.log(reqs);}
+  if(VERBOSE){console.log(reqs);}
 
   if(VERBOSE){console.log(reqs.multiple);}
   if(VERBOSE){console.log(reqs.multiple.length);}
