@@ -1,9 +1,14 @@
+/*
+import { importMe } from "./testmod.js";
+importMe();
+*/
+
 const DEBUG_MODE = false;
 const VERBOSE = false;
 var font = "style=\"font-family: 'Segoe UI', Verdana, Tahoma, sans-serif;\"";
 var fixWidFont = "style=\"font-family: 'Consolas', 'Courier New', Courier, monospace;\"";
 
-function prjReqs() {
+function defaultPrjReqs() {
   if(DEBUG_MODE){console.log("prjReqs called");}
   // Required HTML stuff
   var reqElemSingle = [ "head>", "title", "body", "header", "main", "footer", "meta name=\"description\""]; // nav, table not required // elements required for each page in this project.
@@ -65,7 +70,7 @@ function htmlVal() {
     
     xhr.onload = function() {
       clearTimeout(htmlTimeout);
-      jsonParse = JSON.parse(this.response);
+      let jsonParse = JSON.parse(this.response);
       resolve(jsonParse["messages"]);
       if(DEBUG_MODE){
         let endTime = new Date();
@@ -241,7 +246,7 @@ function openClose(elem, single){
 }
 
 function gatherCss(){
-  rules = "";
+  let rules = "";
   for(let i = 0; i < document.styleSheets.length; i++){
     for(let j=0; j < document.styleSheets[i].cssRules.length; j++){
       rules += document.styleSheets[i].cssRules[j].cssText;
@@ -354,6 +359,10 @@ function setStyles(bgcolor, fgcolor){
   document.querySelector("#feedback").style.background = bgcolor;
   document.querySelector("#feedbackDetails").style.color = fgcolor;
   document.querySelector("#feedbackDetails a").style.color = fgcolor;
+
+  // update other styles
+  document.querySelector("#feedbackDetails a").style.cssText = "all: unset; text-decoration: underline; color: " + fgcolor + ";";
+  document.querySelector("#feedbackDetails h2").style.cssText = "all: unset; font-size: 1.5em; margin-top: 0.83em; margin-bottom: 0.83em; font-weight: bold;"
 }
 
 function feedback(htmlErrs, cssResult, reqs){
@@ -503,7 +512,7 @@ function sidebar(){
 
   // append button
   document.body.appendChild(myElemTag);
-  myElem = document.querySelector("#feedback");
+  let myElem = document.querySelector("#feedback");
   
   // append feedback details
   myElem.appendChild(myDetailsTag);
@@ -522,15 +531,14 @@ function cssValSubset(htmlResult, reqs){
           feedback(htmlResult, cssResult, reqs);
         })
         .catch(function(cssResult){
-          cssValAry = ["CSS Validation Failed."];
+          let cssValAry = ["CSS Validation Failed."];
           if(DEBUG_MODE){console.log("CSS fail, calling fdbk");}
           feedback(htmlResult, cssValAry, reqs);
         })
 }
 
-function mainJamesTest(reqs = prjReqs()) {
+function mainJamesTest(reqs = defaultPrjReqs()) {
   if(reqs == "replaceMe"){
-    //prjReqs();
     reqs = prjReqsVal;
   }
   if(VERBOSE){console.log(reqs);}
@@ -610,10 +618,9 @@ function showOnClick(){
   }
 }
 
-var main = function (reqs = prjReqs()){
-  mainJamesTest(reqs = prjReqs());
+var main = function(reqs = defaultPrjReqs()){
+  mainJamesTest(reqs);
 }
-
-// document.addEventListener("DOMContentLoaded", function(){
-//   mainJamesTest(reqs = prjReqs());
-// });
+window.addEventListener("DOMContentLoaded", function(){
+  mainJamesTest();
+});

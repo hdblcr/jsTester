@@ -16,3 +16,10 @@ div{
   display: flex;
   flex-direction: row;
 }
+a {
+  padding: 1em;
+}
+
+h2 {
+  background-color: purple;
+}
