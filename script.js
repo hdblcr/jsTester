@@ -11,13 +11,14 @@ var fixWidFont = "style=\"font-family: 'Consolas', 'Courier New', Courier, monos
 function defaultPrjReqs() {
   if(DEBUG_MODE){console.log("prjReqs called");}
   // Required HTML stuff
-  var reqElemSingle = [ "head>", "title", "body", "header", "main", "footer", "meta name=\"description\""]; // nav, table not required // elements required for each page in this project.
- var reqElemMultiple = ["img"]; // tr, td, th not required
- var reqList = true;
+  var reqElemSingle = []; // nav, table not required // elements required for each page in this project.
+ var reqElemMultiple = []; // tr, td, th not required
+ var reqList = false;
  var reqComments = false;
- var forbiddenCss = ["@import"];
- var reqCss = ["float", "@import"];
- return {"single": reqElemSingle, "multiple": reqElemMultiple, "list": reqList, "fbdnCss": forbiddenCss, "reqCss": reqCss, "reqComments": reqComments};
+ var forbiddenCss = [];
+ var reqCss = [];
+ var uniqueTitle = false;
+ return {"single": reqElemSingle, "multiple": reqElemMultiple, "list": reqList, "fbdnCss": forbiddenCss, "reqCss": reqCss, "reqComments": reqComments, "uniqueTitle": uniqueTitle};
 }
 
 function cleanString(str){
@@ -281,6 +282,7 @@ function checkConventions(html){
 }
 
 function prjParser(reqs){
+  
   if(DEBUG_MODE){console.log("prjparser called");}
   var errors = [];
   const html = document.documentElement.innerHTML;
@@ -292,18 +294,22 @@ function prjParser(reqs){
   if(VERBOSE){console.log(reqs.multiple.length);}
 
   // loop through required elements (multiple)
-  for (let i = 0; i < reqs.multiple.length; i++){
-    let errs = openClose(reqs.multiple[i], false);
-    if (errs.length > 0){
-      errors.push(errs);
+  if(reqs.multiple){
+    for (let i = 0; i < reqs.multiple.length; i++){
+      let errs = openClose(reqs.multiple[i], false);
+      if (errs.length > 0){
+        errors.push(errs);
+      }
     }
   }
 
   // loop through required elements (single)
-  for (let i = 0; i < reqs.single.length; i++){
-    let errs = openClose(reqs.single[i], true);
-    if (errs.length > 0){
-      errors.push(errs);
+  if(reqs.single){
+    for (let i = 0; i < reqs.single.length; i++){
+      let errs = openClose(reqs.single[i], true);
+      if (errs.length > 0){
+        errors.push(errs);
+      }
     }
   }
 
@@ -319,29 +325,36 @@ function prjParser(reqs){
   }
 
   // forbidden css
-  if(reqs.fbdnCss.length > 0){
-    let fbdnCssErrs = checkForbiddenCss(cssText, reqs.fbdnCss);
-    for (let i=0; i < fbdnCssErrs.length; i++){
-      errors.push(fbdnCssErrs[i] + " used when it should not be.");
+  if(reqs.fbdnCss){
+    if(reqs.fbdnCss.length > 0){
+      let fbdnCssErrs = checkForbiddenCss(cssText, reqs.fbdnCss);
+      for (let i=0; i < fbdnCssErrs.length; i++){
+        errors.push(fbdnCssErrs[i] + " used when it should not be.");
+      }
     }
   }
 
-  // forbidden css
-  if(reqs.reqCss.length > 0){
-    let reqCssErrs = checkReqdCss(cssText, reqs.reqCss);
-    for (let i=0; i < reqCssErrs.length; i++){
-      errors.push(reqCssErrs[i] + " not used when it should be.");
+  // required css
+  if(reqs.reqCss){
+    if(reqs.reqCss.length > 0){
+      let reqCssErrs = checkReqdCss(cssText, reqs.reqCss);
+      for (let i=0; i < reqCssErrs.length; i++){
+        errors.push(reqCssErrs[i] + " not used when it should be.");
+      }
     }
   }
 
-  // title
-  if (countInstanceInStr("<title>repl.it</title>", html) > 0){
-    errors.push("Default title used.");
-  } else if (countInstanceInStr("<title></title>", html) > 0) {
-    errors.push("Empty title used.");
-  } else if (countInstanceInStr("<title>replit</title>", html) > 0) {
-    errors.push("Default title used.");
+  // if unique title is required
+  if(reqs.uniqueTitle) {
+    if (countInstanceInStr("<title>repl.it</title>", html) > 0){
+      errors.push("Default title used.");
+    } else if (countInstanceInStr("<title></title>", html) > 0) {
+      errors.push("Empty title used.");
+    } else if (countInstanceInStr("<title>replit</title>", html) > 0) {
+      errors.push("Default title used.");
+    }
   }
+
 
   // comments
   if((typeof(reqs.reqComments) == "undefined") || reqs.reqComments){
