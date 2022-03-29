@@ -18,7 +18,15 @@ function defaultPrjReqs() {
  var forbiddenCss = [];
  var reqCss = [];
  var uniqueTitle = false;
- return {"single": reqElemSingle, "multiple": reqElemMultiple, "list": reqList, "fbdnCss": forbiddenCss, "reqCss": reqCss, "reqComments": reqComments, "uniqueTitle": uniqueTitle};
+ return {
+   "single": reqElemSingle, 
+   "multiple": reqElemMultiple, 
+   "list": reqList, 
+   "fbdnCss": forbiddenCss, 
+   "reqCss": reqCss, 
+   "reqComments": reqComments, 
+   "uniqueTitle": uniqueTitle
+ };
 }
 
 function cleanString(str){
@@ -634,6 +642,3 @@ function showOnClick(){
 var main = function(reqs = defaultPrjReqs()){
   mainJamesTest(reqs);
 }
-window.addEventListener("DOMContentLoaded", function(){
-  mainJamesTest();
-});
