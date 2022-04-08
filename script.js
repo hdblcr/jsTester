@@ -367,7 +367,7 @@ function prjParser(reqs){
   // comments
   if((typeof(reqs.reqComments) == "undefined") || reqs.reqComments){
     var numComments = countInstanceInStr("<!--", html) + countInstanceInStr("-->", html) / 2;
-    if (numComments - countInstanceInStr("<!-- Don't forget to change your title! -->", html) < 1){
+    if (numComments - countInstanceInStr("<!-- Don't forget to change your title! -->" - countInstanceInStr("<!-- Don't forget to change your description! -->"), html) < 1){
       errors.push("No comments written.");
     }
   }
@@ -384,6 +384,7 @@ function setStyles(bgcolor, fgcolor){
   // update other styles
   document.querySelector("#feedbackDetails a").style.cssText = "all: unset; text-decoration: underline; color: " + fgcolor + ";";
   document.querySelector("#feedbackDetails h2").style.cssText = "all: unset; font-size: 1.5em; margin-top: 0.83em; margin-bottom: 0.83em; font-weight: bold;"
+  document.querySelector("#feedbackDetails ul").style.cssText = "all: unset;";
 }
 
 function feedback(htmlErrs, cssResult, reqs){
