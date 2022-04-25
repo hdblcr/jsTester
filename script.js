@@ -3,7 +3,7 @@ import { importMe } from "./testmod.js";
 importMe();
 */
 
-const DEBUG_MODE = false;
+const DEBUG_MODE = true;
 const VERBOSE = false;
 var font = "style=\"font-family: 'Segoe UI', Verdana, Tahoma, sans-serif;\"";
 var fixWidFont = "style=\"font-family: 'Consolas', 'Courier New', Courier, monospace;\"";
@@ -560,9 +560,6 @@ function cssValSubset(htmlResult, reqs){
 }
 
 function mainJamesTest(reqs = defaultPrjReqs()) {
-  if(reqs == "replaceMe"){
-    reqs = prjReqsVal;
-  }
   if(VERBOSE){console.log(reqs);}
   //if(typeof(reqs))
 
