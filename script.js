@@ -367,7 +367,10 @@ function prjParser(reqs){
   // comments
   if((typeof(reqs.reqComments) == "undefined") || reqs.reqComments){
     var numComments = countInstanceInStr("<!--", html) + countInstanceInStr("-->", html) / 2;
-    if ((numComments - countInstanceInStr("<!-- Don't forget to change your title! -->") - countInstanceInStr("<!-- Don't forget to change your description! -->"), html) < 1){
+    if ((numComments 
+         - countInstanceInStr("<!-- Don't forget to change your title! -->", html) 
+         - countInstanceInStr("<!-- Don't forget to change your description! -->", html)
+        ) < 1){
       errors.push("No comments written.");
     }
   }
