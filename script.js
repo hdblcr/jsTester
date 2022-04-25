@@ -3,7 +3,7 @@ import { importMe } from "./testmod.js";
 importMe();
 */
 
-const DEBUG_MODE = true;
+const DEBUG_MODE = false;
 const VERBOSE = false;
 var font = "style=\"font-family: 'Segoe UI', Verdana, Tahoma, sans-serif;\"";
 var fixWidFont = "style=\"font-family: 'Consolas', 'Courier New', Courier, monospace;\"";
@@ -367,7 +367,7 @@ function prjParser(reqs){
   // comments
   if((typeof(reqs.reqComments) == "undefined") || reqs.reqComments){
     var numComments = countInstanceInStr("<!--", html) + countInstanceInStr("-->", html) / 2;
-    if (numComments - countInstanceInStr("<!-- Don't forget to change your title! -->" - countInstanceInStr("<!-- Don't forget to change your description! -->"), html) < 1){
+    if ((numComments - countInstanceInStr("<!-- Don't forget to change your title! -->") - countInstanceInStr("<!-- Don't forget to change your description! -->"), html) < 1){
       errors.push("No comments written.");
     }
   }
