@@ -560,7 +560,10 @@ function cssValSubset(htmlResult, reqs){
         })
         .catch(function(cssResult){
           let cssValAry = ["CSS Validation Failed."];
-          if(DEBUG_MODE){console.log("CSS fail, calling fdbk");}
+          if(DEBUG_MODE){
+            console.log("CSS fail, calling fdbk");
+            console.log(cssResult);
+          }
           feedback(htmlResult, cssValAry, reqs);
         })
 }
