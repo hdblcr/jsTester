@@ -385,12 +385,15 @@ function prjParser(reqs){
 function setStyles(bgcolor, fgcolor){
   document.querySelector("#feedback").style.background = bgcolor;
   document.querySelector("#feedbackDetails").style.color = fgcolor;
-  document.querySelector("#feedbackDetails a").style.color = fgcolor;
-
-  // update other styles
-  document.querySelector("#feedbackDetails a").style.cssText = "all: unset; text-decoration: underline; color: " + fgcolor + ";";
-  document.querySelector("#feedbackDetails h2").style.cssText = "all: unset; font-size: 1.5em; margin-top: 0.83em; margin-bottom: 0.83em; font-weight: bold;"
-  document.querySelector("#feedbackDetails ul").style.cssText = "all: unset;";
+  if (document.querySelector("#feedbackDetails a").length > 0){
+    document.querySelector("#feedbackDetails a").style.cssText = "all: unset; text-decoration: underline; color: " + fgcolor + ";";
+  }
+  if (document.querySelector("#feedbackDetails h2").length > 0){
+    document.querySelector("#feedbackDetails h2").style.cssText = "all: unset; font-size: 1.5em; margin-top: 0.83em; margin-bottom: 0.83em; font-weight: bold;"
+  }
+  if(document.querySelector("#feedbackDetails ul").length > 0) {
+    document.querySelector("#feedbackDetails ul").style.cssText = "all: unset;";
+  }
 }
 
 function feedback(htmlErrs, cssResult, reqs){
