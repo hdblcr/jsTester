@@ -3,8 +3,8 @@ import { importMe } from "./testmod.js";
 importMe();
 */
 
-const DEBUG_MODE = false;
-const VERBOSE = false;
+var DEBUG_MODE = false;
+var VERBOSE = false;
 var font = "style=\"font-family: 'Segoe UI', Verdana, Tahoma, sans-serif;\"";
 var fixWidFont = "style=\"font-family: 'Consolas', 'Courier New', Courier, monospace;\"";
 
