@@ -12,12 +12,13 @@ function defaultPrjReqs() {
   if(DEBUG_MODE){console.log("prjReqs called");}
   // Required HTML stuff
   var reqElemSingle = []; // nav, table not required // elements required for each page in this project.
- var reqElemMultiple = []; // tr, td, th not required
- var reqList = false;
- var reqComments = false;
- var forbiddenCss = [];
- var reqCss = [];
- var uniqueTitle = false;
+  var reqElemMultiple = []; // tr, td, th not required
+  var reqList = false;
+  var reqComments = false;
+  var forbiddenCss = [];
+  var reqCss = [];
+  var uniqueTitle = false;
+  
  return {
    "single": reqElemSingle, 
    "multiple": reqElemMultiple, 
@@ -25,7 +26,9 @@ function defaultPrjReqs() {
    "fbdnCss": forbiddenCss, 
    "reqCss": reqCss, 
    "reqComments": reqComments, 
-   "uniqueTitle": uniqueTitle
+   "uniqueTitle": uniqueTitle,
+   "debug": DEBUG_MODE,
+   "verbose": VERBOSE
  };
 }
 
@@ -563,6 +566,14 @@ function cssValSubset(htmlResult, reqs){
 }
 
 function mainJamesTest(reqs = defaultPrjReqs()) {
+  if(typeof(reqs.debug) !== 'undefined'){
+    DEBUG_MODE = reqs.debug;
+  }
+  
+  if(typeof(reqs.verbose) !== 'undefined'){
+    VERBOSE = reqs.verbose;
+  }
+  
   if(VERBOSE){console.log(reqs);}
   //if(typeof(reqs))
 
