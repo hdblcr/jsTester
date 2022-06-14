@@ -1,10 +1,23 @@
-export function prjReqs() {
+export function defaultPrjReqs() {
+  if(window.DEBUG_MODE){console.log("prjReqs called");}
   // Required HTML stuff
-  var reqElemSingle = [ "head>", "title", "body", "header", "main", "footer", "meta name=\"description\""]; // nav, table not required // elements required for each page in this project.
- var reqElemMultiple = ["img"]; // tr, td, th not required
- var reqList = true;
- var reqComments = false;
- var forbiddenCss = ["@import"];
- var reqCss = ["float", "@import"];
- return {"single": reqElemSingle, "multiple": reqElemMultiple, "list": reqList, "fbdnCss": forbiddenCss, "reqCss": reqCss, "reqComments": reqComments};
+  var reqElemSingle = []; // nav, table not required // elements required for each page in this project.
+  var reqElemMultiple = []; // tr, td, th not required
+  var reqList = false;
+  var reqComments = false;
+  var forbiddenCss = [];
+  var reqCss = [];
+  var uniqueTitle = false;
+  
+ return {
+   "single": reqElemSingle, 
+   "multiple": reqElemMultiple, 
+   "list": reqList, 
+   "fbdnCss": forbiddenCss, 
+   "reqCss": reqCss, 
+   "reqComments": reqComments, 
+   "uniqueTitle": uniqueTitle,
+   "debug": window.DEBUG_MODE,
+   "verbose": window.VERBOSE
+ };
 }
