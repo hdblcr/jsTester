@@ -571,7 +571,7 @@ function cssValSubset(htmlResult, reqs){
         })
 }
 
-function mainJamesTest(reqs = defaultPrjReqs()) {
+export function mainJamesTest(reqs = defaultPrjReqs()) {
   if(typeof(reqs.debug) !== 'undefined'){
     DEBUG_MODE = reqs.debug;
   }
