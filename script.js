@@ -571,7 +571,9 @@ function cssValSubset(htmlResult, reqs){
         })
 }
 
-export function mainJamesTest(reqs = defaultPrjReqs()) {
+
+
+export function validate(reqs = defaultPrjReqs()) {
   if(typeof(reqs.debug) !== 'undefined'){
     DEBUG_MODE = reqs.debug;
   }
@@ -658,5 +660,9 @@ function showOnClick(){
 }
 
 var main = function(reqs = defaultPrjReqs()){
-  mainJamesTest(reqs);
+  validate(reqs);
+}
+
+var mainJamesTest = function (reqs = defaultPrjReqs()){
+  validate(reqs);
 }
