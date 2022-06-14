@@ -1,4 +1,4 @@
-import { mainJamesTest } from "script.js";
+import { mainJamesTest } from "./script.js";
 // window.addEventListener("DOMContentLoaded", function(){
 //   // Required HTML stuff
 //   var reqElemSingle = [ "head>", "body", "meta name=\"description\""]; // required elements that should appear once per page
