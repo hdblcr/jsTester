@@ -37,7 +37,7 @@ export function htmlVal() {
   });
 }
 
-function openClose(elem, single){
+export function openClose(elem, single){
   var errs = "";
   var elemOpened = true;
   var elemClosed = true;
