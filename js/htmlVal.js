@@ -1,4 +1,4 @@
-import { countInstanceInStr } from "./functions.js";
+import { countInstanceInStr, elemName } from "./functions.js";
 
 export function htmlVal() {
   return new Promise(function(resolve, reject){
