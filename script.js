@@ -8,7 +8,7 @@ window.VERBOSE = false;
 window.font = "style=\"font-family: 'Segoe UI', Verdana, Tahoma, sans-serif;\"";
 window.fixWidFont = "style=\"font-family: 'Consolas', 'Courier New', Courier, monospace;\"";
 
-export function validate(reqs = defaultPrjReqs()) {
+export var validate = function(reqs = defaultPrjReqs()) {
   if(typeof(reqs.debug) !== 'undefined'){
     window.DEBUG_MODE = reqs.debug;
   }
@@ -41,6 +41,8 @@ export function validate(reqs = defaultPrjReqs()) {
   // Build sidebar
   sidebar();
 }
+
+window.validate = validate;
 
 var main = function(reqs = defaultPrjReqs()){
   validate(reqs);
