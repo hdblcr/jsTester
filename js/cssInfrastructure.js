@@ -8,7 +8,7 @@ function checkForbiddenCss(css, fbdnCss){
   return alert;
 }
 
-function checkReqdCss(css, reqCss){
+export function checkReqdCss(css, reqCss){
     alert = [];
   for(let i=0; i < reqCss.length; i++){
     if(countInstanceInStr(reqCss[i], css) < 1 ){
