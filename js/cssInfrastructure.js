@@ -1,3 +1,5 @@
+import { countInstanceInStr } from "./functions.js";
+
 function checkForbiddenCss(css, fbdnCss){
   alert = [];
   for(let i=0; i < fbdnCss.length; i++){
