@@ -1,6 +1,6 @@
 import { gatherCss } from "./cssCheck.js";
 import { openClose } from "./htmlVal.js";
-import { countInstanceInStr } from "./functions.js";
+import { countInstanceInStr, elemName } from "./functions.js";
 import { checkReqdCss } from "./cssInfrastructure.js";
 
 export function prjParser(reqs){
